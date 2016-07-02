@@ -23,12 +23,12 @@ function initMap() {
 function ViewModel() {
   
 var myObservableArray = ko.observableArray();    // Initially an empty array
-myObservableArray.push.apply(attractions);         
+myObservableArray.push(attractions);         
 
 
   var self = this;
   self.markers = [];
-  self.Attractions = ko.observableArray(Attractions);
+  self.Attractions = ko.observableArray(myObservableArray);
 
   self.Attractions().forEach(function(attraction) {
     var marker = new google.maps.Marker({
