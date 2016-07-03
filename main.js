@@ -9,10 +9,10 @@ var attractions = [
     {name: "The Pantheon", position: {lat: 48.8461, lng: 2.3458}, desc: "The Pantheon was originally built in dedication to St. Genevieve", id: "4adcda09f964a520ea3321e3"}
     ];
 
-
+var maps;
 //rendering the map and giving it coordinates
 function initMap() {
-  var map = new google.maps.Map(document.getElementById('map'), {
+  map = new google.maps.Map(document.getElementById('map'), {
     zoom: 13,
     center: {lat: 48.8567, lng: 2.3508},
    });
@@ -28,7 +28,7 @@ myObservableArray.push(attractions);
 
   var self = this;
   self.markers = [];
-  self.Attractions = ko.observableArray(myObservableArray);
+  self.Attractions = ko.observableArray(myObservableArray());
 
   self.Attractions().forEach(function(attraction) {
     var marker = new google.maps.Marker({
