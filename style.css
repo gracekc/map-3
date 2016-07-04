@@ -1,6 +1,7 @@
 .map {
 	width: 100%;
 	height: 100%;
+	padding-top: 100px;
 }
 html, body {
         height: 100%;
@@ -12,24 +13,9 @@ html, body {
  	position: absolute;
  	width: 100%;
  	height: 25px;
- 	top: 0;
+ 	top: 10;
  }
 
- .list-view {
- 	position: absolute;
- 	background-image: "paris.jpg";
- 	top: 30;
- 	z-index: 1;
- 	color: black;
- }
-
- .list-view p {
- 	font-size: 1.0em;
- 	font-family: "Times New Roman", Times, serif;
- 	margin: 10px 5px;
- }
-
- .list-view p:hover {
- 	background: hsl(0, 100%, 95%);
- 	cursor: pointer;
+ ul {
+ 	padding-top: 40px;
  }
