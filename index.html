@@ -9,12 +9,26 @@
     <script src="http://code.jquery.com/jquery.min.js"></script>
   </head>
   <body>
-   
+   <!-- making the map -->
     <div id="map" class="map"></div>
- 
+ <!-- making the search bar -->
+ <div class="container">
+  <div class = "col-md-12">
+  <input type="search" id="autocomplete" placeholder="Search for a Tourist Attraction!" size="35" data-bind="textInput: query, valueUpdate: 'keyup'"/>
+  <div class="col-md-4">
+
+  <!-- making the list view -->
+<div class="list-view" data-bind="foreach: search">
+  <p class="list-item" data-bind="text: $data.name, click: $parent.listViewClick"></p>
+  </div>
+  </div>
+  </div>
+  </div>
+  
 
  <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHZuklRTK_rMDqio4L06Bsz4l6F2WyqMk&callback=initMap"></script>
 
+          
   </body>
 </html>
