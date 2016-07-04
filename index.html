@@ -7,28 +7,59 @@
     <script type="text/javascript" src="main.js"></script>
     <script src="knockout.js"></script>
     <script src="http://code.jquery.com/jquery.min.js"></script>
-  </head>
-  <body>
-   <!-- making the map -->
-    <div id="map" class="map"></div>
- <!-- making the search bar -->
- <div class="container">
-  <div class = "col-md-12">
-  <input type="search" id="autocomplete" placeholder="Search for a Tourist Attraction!" size="35" data-bind="textInput: query, valueUpdate: 'keyup'"/>
-  <div class="col-md-4">
+    
+    <script src='http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js'></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/1.2.1/knockout-min.js"></script>
 
-  <!-- making the list view -->
-<div class="list-view" data-bind="foreach: search">
-  <p class="list-item" data-bind="text: $data.name, click: $parent.listViewClick"></p>
-  </div>
-  </div>
-  </div>
-  </div>
-  
+  <script>
+  $(function() {
+  var attractions = [
+    {name: "The Eiffel Tower", position: {lat: 48.8582, lng: 2.2945}, desc: "The Eiffel Tower was built as an entrance for the 1889 World Fair.", id: "51a2445e5019c80b56934c75"},
+    {name: "The Louvre", position: {lat: 48.8611, lng: 2.3364}, desc: "The Mona Lisa is housed at the Louvre", id: "4adcda10f964a520af3521e3"},
+    {name: "The Arc de Triomphe", position: {lat: 48.873756, lng: 2.294946}, desc: "The Arc de Triomphe was built in the early 19th century", id: "4adcda09f964a520de3321e3"},
+    {name: "The Notre Dame", position: {lat: 48.8530, lng: 2.3498}, desc: "Notre Dame, or 'Our Lady of Paris', is a Catholic cathedral", id: "4adcda09f964a520e83321e3"},
+    {name: "The Pantheon", position: {lat: 48.8461, lng: 2.3458}, desc: "The Pantheon was originally built in dedication to St. Genevieve", id: "4adcda09f964a520ea3321e3"}
+    ];
 
- <script async defer
+
+    var viewModel = {
+      attractions: ko.observableArray(attractions),
+
+      query: ko.observable(''),
+
+      search: function(value) {
+        viewModel.attractions.removeAll();
+        for(var x in attractions) {
+          if(attractions[x].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+            viewModel.attractions.push(attractions[x]);
+          }
+        }
+      }
+    };
+
+    viewModel.query.subscribe(viewModel.search);
+
+    ko.applyBindings(viewModel);
+  });
+  </script>
+</head>
+<body>
+  <header>
+    <form action="#">
+      <input placeholder="Search..." type="search" name="q" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
+    </form>
+  </header>
+  <div class="content">
+    <ul data-bind="template: {name:'attraction', foreach:attractions}">
+    </ul>
+  </div>
+
+  <script data-proofer-ignore type="text/html" id="attraction">
+    <li>
+      <strong data-bind="text: name"></strong>
+    </li>
+  </script>
+  <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHZuklRTK_rMDqio4L06Bsz4l6F2WyqMk&callback=initMap"></script>
-
-          
-  </body>
+</body>
 </html>
