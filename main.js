@@ -9,13 +9,10 @@ var attractions = [
     {name: "The Pantheon", position: {lat: 48.8461, lng: 2.3458}, desc: "The Pantheon was originally built in dedication to St. Genevieve", id: "4adcda09f964a520ea3321e3"}
     ];
 
-var maps;
+var map;
 var start;
 var end;
 var days;
-
-
-
 
 
 //rendering the map and giving it coordinates
@@ -26,6 +23,8 @@ function initMap() {
    });
   ko.applyBindings(ViewModel);
   } 
+
+
 
 //VIEW MODEL
 function ViewModel() {
@@ -86,7 +85,7 @@ myObservableArray(attractions);
             
           });
 
-          attraction.infoWindow = infoWindow;
+           infoWindow = attraction.infoWindow;
           attraction.marker.addListener('click', function() {
             infoWindow.open(map, this);
             attraction.marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -101,31 +100,8 @@ myObservableArray(attractions);
         }
       });
  
-  self.listViewClick = function(attraction){
-    if (attraction.name) {
-      map.setZoom(16);
-      map.panTo(attraction.position);
-      if (currentInfoWindow !== undefined) {
-        currentInfoWindow.close();
-      }
-      currentInfoWindow = attraction.infoWindow;
-      currentInfoWindow.open(map, attraction.marker);
-    }
-  };
-  
-  self.query = ko.observable('');
 
-self.search = ko.computed(function () {
-  return ko.utils.arrayFilter(self.Attractions, function (listResult) {
-    var result = listResult.name.toLowerCase().indexOf(self.query().toLowerCase());
-    if (result === -1) {
-      listResult.marker.setVisible(false);
-    } else {
-      listResult.marker.setVisible(true);
-    }
-    return result >= 0;
-  });
-});
+
   });
 }
 
