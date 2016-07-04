@@ -7,9 +7,10 @@
     <script type="text/javascript" src="main.js"></script>
     <script src="knockout.js"></script>
     <script src="http://code.jquery.com/jquery.min.js"></script>
-    
-    <script src='http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js'></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/1.2.1/knockout-min.js"></script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHZuklRTK_rMDqio4L06Bsz4l6F2WyqMk&callback=initMap"></script>
+  	<script src='http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js'></script>
+  	<script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/1.2.1/knockout-min.js"></script>
 
   <script>
   $(function() {
@@ -44,11 +45,13 @@
   </script>
 </head>
 <body>
+   <div id="map" class="map"></div>
   <header>
     <form action="#">
       <input placeholder="Search..." type="search" name="q" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
     </form>
   </header>
+
   <div class="content">
     <ul data-bind="template: {name:'attraction', foreach:attractions}">
     </ul>
@@ -59,7 +62,5 @@
       <strong data-bind="text: name"></strong>
     </li>
   </script>
-  <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHZuklRTK_rMDqio4L06Bsz4l6F2WyqMk&callback=initMap"></script>
 </body>
 </html>
