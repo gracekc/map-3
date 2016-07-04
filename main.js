@@ -25,13 +25,25 @@ function initMap() {
   } 
 
 
-
 //VIEW MODEL
 function ViewModel() {
   
 var myObservableArray = ko.observableArray();    // Initially an empty array
 myObservableArray(attractions);         
 
+ query: ko.observable(''),
+
+      function search(value) {
+        ViewModel.attractions.removeAll();
+        for(var x in attractions) {
+          if(attractions[x].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+            ViewModel.attractions.push(attractions[x]);
+          }
+        }
+      }
+ViewModel.query.subscribe(ViewModel.search);
+
+    ko.applyBindings(ViewModel);
 
   var self = this;
   self.markers = [];
@@ -98,11 +110,12 @@ myObservableArray(attractions);
 
           });
         }
+
       });
  
-
-
   });
+
+
 }
 
 
