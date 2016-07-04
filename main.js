@@ -10,6 +10,14 @@ var attractions = [
     ];
 
 var maps;
+var start;
+var end;
+var days;
+
+
+
+
+
 //rendering the map and giving it coordinates
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
@@ -23,7 +31,7 @@ function initMap() {
 function ViewModel() {
   
 var myObservableArray = ko.observableArray();    // Initially an empty array
-myObservableArray.push(attractions);         
+myObservableArray(attractions);         
 
 
   var self = this;
@@ -41,38 +49,70 @@ myObservableArray.push(attractions);
     marker.setVisible(true);
     self.markers.push(marker);
 
+
+
     ///Foursquare component, accessing each attraction's hours
+     
+    var ClientID = "?client_id=CJIJLBUPBHEZM4MMIIJQ00EYCOGOQJ3FOKXTBD45JQNAV25L";
+    var ClientSecret = "&client_secret=ASCY0W0MVKXQXWGIDT3AIL1GOQBOZDXXEH11YN3MRZXWYWFQ";
+
       $.ajax({
           type: "GET",
-          url: 'https://api.foursquare.com/v2/venues/' + attraction.id + '/hours',
           dataType: 'json',
           cache: false,
-          async: true
-      });
-          var infoWindow = new google.maps.InfoWindow({
-            content: attraction.desc
+          url: 'https://api.foursquare.com/v2/venues/' + attraction.id + '/hours' + ClientID + ClientSecret + '&v=20160703',
+          
+          async: true,
+          success: function(data) {
+            console.log(data.response.hours.timeframes[0].open[0].start);
+            console.log(data.response.hours.timeframes[0].open[0].end);
+            console.log(data.response.hours.timeframes[0].days);
+            
+            start = (data.response.hours.timeframes[0].open[0].start);
+            end = (data.response.hours.timeframes[0].open[0].end);
+            days = (data.response.hours.timeframes[0].days);
 
-            /*'<div id="content">'+ 
+          var infoWindow = new google.maps.InfoWindow({
+            content: '<div id="content">'+ 
             '<div id="sideNotice">' + 
             '</div>' +
-            '<h2 id="firstHeading" class="firstHeading">attraction.name</h2>' +
+            '<h2 id="firstHeading" class="firstHeading">' + attraction.name +'</h2>' +
             '<div id="bodyContent">' +
-            '<p>attraction.desc</p>' +
+            '<p>' + attraction.desc + '</p>' +
+            '<p> Open from: ' + start + ' to ' + end + '</p>' +
+            '<p> On: ' + days + '</p>' +
           '</div>'+
-          '</div>'*/
+          '</div>'
+            
           });
 
           attraction.infoWindow = infoWindow;
           attraction.marker.addListener('click', function() {
             infoWindow.open(map, this);
             attraction.marker.setAnimation(google.maps.Animation.BOUNCE);
+            
+
+
             setTimeout(function () {
               attraction.marker.setAnimation(null);
-            }, 1000);
+            }, 1500);
+
           });
+        }
       });
  
-
+  self.listViewClick = function(attraction){
+    if (attraction.name) {
+      map.setZoom(16);
+      map.panTo(attraction.position);
+      if (currentInfoWindow !== undefined) {
+        currentInfoWindow.close();
+      }
+      currentInfoWindow = attraction.infoWindow;
+      currentInfoWindow.open(map, attraction.marker);
+    }
+  };
+  
   self.query = ko.observable('');
 
 self.search = ko.computed(function () {
@@ -86,9 +126,8 @@ self.search = ko.computed(function () {
     return result >= 0;
   });
 });
-
+  });
 }
-
 
 
 
