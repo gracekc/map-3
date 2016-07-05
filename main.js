@@ -1,3 +1,5 @@
+
+
 //MODEL
 var infoWindow;
 //first an array of the various locations for my markers
@@ -9,47 +11,58 @@ var attractions = [
     {name: "The Pantheon", position: {lat: 48.8461, lng: 2.3458}, desc: "The Pantheon was originally built in dedication to St. Genevieve", id: "4adcda09f964a520ea3321e3"}
     ];
 
+
 var map;
 var start;
 var end;
 var days;
-
+var viewModel;
 
 //rendering the map and giving it coordinates
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     zoom: 13,
     center: {lat: 48.8567, lng: 2.3508},
-   });
-  ko.applyBindings(ViewModel);
+  });
+  ko.applyBindings(viewModel);
   } 
+
 
 
 //VIEW MODEL
 function ViewModel() {
-  
-var myObservableArray = ko.observableArray();    // Initially an empty array
-myObservableArray(attractions);         
+viewModel = new ViewModel();
 
- query: ko.observable(''),
+
+var attractions = ko.observableArray();    // Initially an empty array
+attractions(attractions);         
+
+var query = ko.observable('');
 
       function search(value) {
         ViewModel.attractions.removeAll();
+        marker.setMap(null);
         for(var x in attractions) {
           if(attractions[x].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
             ViewModel.attractions.push(attractions[x]);
+            attractions[x].marker.setMap(map);
           }
         }
       }
-ViewModel.query.subscribe(ViewModel.search);
 
-    ko.applyBindings(ViewModel);
+ViewModel.query.subscribe(viewModel.search());
+
+    ko.applyBindings(viewModel);
+  
+  search();
 
   var self = this;
   self.markers = [];
-  self.Attractions = ko.observableArray(myObservableArray());
+  self.Attractions = ko.observableArray(attractions());
 
   self.Attractions().forEach(function(attraction) {
+    
+
     var marker = new google.maps.Marker({
       position: attraction.position,
       map: map,
@@ -112,14 +125,12 @@ ViewModel.query.subscribe(ViewModel.search);
         }
 
       });
- 
-  });
+
+  
 
 
+});
 }
-
-
-
 
 
 
