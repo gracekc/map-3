@@ -1,5 +1,3 @@
-
-
 //MODEL
 var infoWindow;
 //first an array of the various locations for my markers
@@ -11,11 +9,11 @@ var attractions = [
     {name: "The Pantheon", position: {lat: 48.8461, lng: 2.3458}, desc: "The Pantheon was originally built in dedication to St. Genevieve", id: "4adcda09f964a520ea3321e3"}
     ];
 
-
 var map;
 var start;
 var end;
 var days;
+var currentInfoWindow;
 var viewModel;
 
 //rendering the map and giving it coordinates
@@ -23,46 +21,62 @@ function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     zoom: 13,
     center: {lat: 48.8567, lng: 2.3508},
-  });
-  ko.applyBindings(viewModel);
+   });
+  viewModel = new ViewModel();
+    ko.applyBindings(viewModel);
   } 
 
+ /*var viewModel;
+ viewModel = {
+      var myObservableArray = ko.observableArray(attractions),
 
+      var query = ko.observable(''),
 
-//VIEW MODEL
-function ViewModel() {
-viewModel = new ViewModel();
-
-
-var attractions = ko.observableArray();    // Initially an empty array
-attractions(attractions);         
-
-var query = ko.observable('');
-
-      function search(value) {
-        ViewModel.attractions.removeAll();
-        marker.setMap(null);
-        for(var x in attractions) {
-          if(attractions[x].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-            ViewModel.attractions.push(attractions[x]);
-            attractions[x].marker.setMap(map);
+      search: function(value) {
+        viewModel.myObservableArray.removeAll();
+        for(var x in myObservableArray) {
+          if(myObservableArray[x].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+            viewModel.myObservableArray.push(myObservableArray[x]);
           }
         }
       }
+    };
 
-ViewModel.query.subscribe(viewModel.search());
+    viewModel.query.subscribe(viewModel.search);
 
-    ko.applyBindings(viewModel);
+    ko.applyBindings(viewModel);*/
+
+//VIEW MODEL
+function ViewModel() {
   
-  search();
+
+
+var myObservableArray = ko.observableArray();    // Initially an empty array
+myObservableArray(attractions);         
+
+var query = ko.observable('');
+
+/* function search(value) {
+        ViewModel.myObservableArray.removeAll();
+        for(var x in myObservableArray) {
+          if(myObservableArray[x].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+            ViewModel.myObservableArray.push(myObservableArray[x]);
+          }
+        }
+      }*/
+
+ 
 
   var self = this;
   self.markers = [];
-  self.Attractions = ko.observableArray(attractions());
+
+
+
+  self.Attractions = ko.observableArray(myObservableArray());
+
+
 
   self.Attractions().forEach(function(attraction) {
-    
-
     var marker = new google.maps.Marker({
       position: attraction.position,
       map: map,
@@ -110,28 +124,28 @@ ViewModel.query.subscribe(viewModel.search());
             
           });
 
-           infoWindow = attraction.infoWindow;
+          attraction.infoWindow = infoWindow;
           attraction.marker.addListener('click', function() {
-            infoWindow.open(map, this);
+           if(currentInfoWindow !== undefined){
+            currentInfoWindow.close();
+           }
+           currentInfoWindow = attraction.infoWindow;
+            attraction.infoWindow.open(map, this);
             attraction.marker.setAnimation(google.maps.Animation.BOUNCE);
             
-
-
             setTimeout(function () {
               attraction.marker.setAnimation(null);
             }, 1500);
 
           });
         }
+        });
 
       });
 
-  
-
-
-});
 }
 
 
+    //ViewModel.query.subscribe(search());
 
-
+    //ko.applyBindings(ViewModel);
