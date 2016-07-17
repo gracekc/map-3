@@ -2,11 +2,11 @@
 var infoWindow;
 //first an array of the various locations for my markers
 var attractions = [
-    {name: "The Eiffel Tower", position: {lat: 48.8582, lng: 2.2945}, desc: "The Eiffel Tower was built as an entrance for the 1889 World Fair.", id: "51a2445e5019c80b56934c75"},
-    {name: "The Louvre", position: {lat: 48.8611, lng: 2.3364}, desc: "The Mona Lisa is housed at the Louvre", id: "4adcda10f964a520af3521e3"},
-    {name: "The Arc de Triomphe", position: {lat: 48.873756, lng: 2.294946}, desc: "The Arc de Triomphe was built in the early 19th century", id: "4adcda09f964a520de3321e3"},
-    {name: "The Notre Dame", position: {lat: 48.8530, lng: 2.3498}, desc: "Notre Dame, or 'Our Lady of Paris', is a Catholic cathedral", id: "4adcda09f964a520e83321e3"},
-    {name: "The Pantheon", position: {lat: 48.8461, lng: 2.3458}, desc: "The Pantheon was originally built in dedication to St. Genevieve", id: "4adcda09f964a520ea3321e3"}
+    {name: "The Eiffel Tower", position: {lat: 48.8582, lng: 2.2945}, desc: "The Eiffel Tower was built as an entrance for the 1889 World Fair.", id: "51a2445e5019c80b56934c75", visible: ko.observable(true)},
+    {name: "The Louvre", position: {lat: 48.8611, lng: 2.3364}, desc: "The Mona Lisa is housed at the Louvre", id: "4adcda10f964a520af3521e3", visible: ko.observable(true)},
+    {name: "The Arc de Triomphe", position: {lat: 48.873756, lng: 2.294946}, desc: "The Arc de Triomphe was built in the early 19th century", id: "4adcda09f964a520de3321e3", visible: ko.observable(true)},
+    {name: "The Notre Dame", position: {lat: 48.8530, lng: 2.3498}, desc: "Notre Dame, or 'Our Lady of Paris', is a Catholic cathedral", id: "4adcda09f964a520e83321e3", visible: ko.observable(true)},
+    {name: "The Pantheon", position: {lat: 48.8461, lng: 2.3458}, desc: "The Pantheon was originally built in dedication to St. Genevieve", id: "4adcda09f964a520ea3321e3", visible: ko.observable(true)}
     ];
 
 var map;
@@ -51,30 +51,29 @@ function ViewModel() {
   
 var self = this;
 
-var myObservableArray = ko.observableArray();    // Initially an empty array
-myObservableArray(attractions);         
+self.Attractions = ko.observableArray(attractions);         
 
 
 self.query = ko.observable('');
 
- function search(value) {
-        ViewModel.myObservableArray.removeAll();
-        for(var x in myObservableArray) {
-          if(myObservableArray[x].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-            ViewModel.myObservableArray.push(myObservableArray[x]);
+ self.search = function() {
+  console.log(self.Attractions());
+        //self.Attractions.removeAll();
+        for(var x = 0; x < self.Attractions().length; x++) {
+          self.Attractions()[x].visible(false)
+          self.Attractions()[x].marker.setVisible(false)
+
+          if(self.Attractions()[x].name.toLowerCase().indexOf(self.query().toLowerCase()) >= 0) {
+           self.Attractions()[x].visible(true);
+           self.Attractions()[x].marker.setVisible(true);
           }
         }
       }
 
- 
+self.query.subscribe(self.search);
 
   
   self.markers = [];
-
-
-
-  self.Attractions = ko.observableArray(myObservableArray());
-
 
 
   self.Attractions().forEach(function(attraction) {
@@ -85,10 +84,18 @@ self.query = ko.observable('');
     });
 
     attraction.marker = marker;
-    marker.setVisible(true);
-    self.markers.push(marker);
+    
+    //self.markers.push(marker);
 
-
+$(document).ready(function() {
+  $('li').click(function() {
+    console.log("clicked");
+    //infowindow.open(self.googleMap, place.marker);
+    //google.maps.event.trigger(markers[i], 'click');
+    //attraction.infoWindow.open(map, this);
+    //attraction.marker.setAnimation(google.maps.Animation.BOUNCE);
+  });
+});
 
     ///Foursquare component, accessing each attraction's hours
      
@@ -128,6 +135,7 @@ self.query = ko.observable('');
           attraction.infoWindow = infoWindow;
           attraction.marker.addListener('click', function() {
            if(currentInfoWindow !== undefined){
+
             currentInfoWindow.close();
            }
            currentInfoWindow = attraction.infoWindow;
@@ -147,5 +155,5 @@ self.query = ko.observable('');
 }
 
 
-    //ViewModel.query.subscribe(search());
+    
 
