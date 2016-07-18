@@ -26,25 +26,6 @@ function initMap() {
     ko.applyBindings(viewModel);
   } 
 
- /*var viewModel;
- viewModel = {
-      var myObservableArray = ko.observableArray(attractions),
-
-      var query = ko.observable(''),
-
-      search: function(value) {
-        viewModel.myObservableArray.removeAll();
-        for(var x in myObservableArray) {
-          if(myObservableArray[x].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-            viewModel.myObservableArray.push(myObservableArray[x]);
-          }
-        }
-      }
-    };
-
-    viewModel.query.subscribe(viewModel.search);
-
-    ko.applyBindings(viewModel);*/
 
 //VIEW MODEL
 function ViewModel() {
@@ -85,17 +66,8 @@ self.query.subscribe(self.search);
 
     attraction.marker = marker;
     
-    //self.markers.push(marker);
 
-$(document).ready(function() {
-  $('li').click(function() {
-    console.log("clicked");
-    //infowindow.open(self.googleMap, place.marker);
-    //google.maps.event.trigger(markers[i], 'click');
-    //attraction.infoWindow.open(map, this);
-    //attraction.marker.setAnimation(google.maps.Animation.BOUNCE);
-  });
-});
+
 
     ///Foursquare component, accessing each attraction's hours
      
@@ -147,8 +119,22 @@ $(document).ready(function() {
             }, 1500);
 
           });
+
+
         }
         });
+
+     self.listViewClick = function(attraction) {
+      attraction.marker = marker;
+         google.maps.event.trigger(attraction.marker, 'click');
+        if (attraction.name) {
+            attraction.marker.setAnimation(google.maps.Animation.BOUNCE); // Cause markers to bounce when clicked
+           } 
+            setTimeout(function() {
+              attraction.marker.setAnimation(null); // End marker animation after 2 seconds 
+            }, 1500);
+
+}
 
       });
 
